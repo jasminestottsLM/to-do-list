@@ -1,5 +1,8 @@
 package com.libertymutual.goforcode.todolist.services;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.mockito.Matchers.anyList;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -32,25 +35,33 @@ public class ToDoItemRepository {
      * @return A list of the items. If no items exist, returns an empty list.
      */
     public List<ToDoItem> getAll() {
-//    	try (Reader in = new FileReader("to-do-list.csv")) {
- //   		CSVParser records = CSVFormat.EXCEL.parse(in);
-  //  		for (CSVRecord record: records) {
-   // 			String ToDoItem = record.get("items");
-   // 			System.out.println(records);
-   // 		}
-    		
-    		
-   // 		System.out.println("good to here");
-    	// Replace this with something meaningful
-       
-   // 		} catch (FileNotFoundException e) {
-//				System.out.println("File not found");
-//			} catch (IOException e) {
-	//			System.out.println("IO Exception");
-		//	}
+ 
     	
-    	 return Collections.emptyList();
-    	 
+    	List<ToDoItem> items = new ArrayList<ToDoItem>();
+    	
+    	try  (Reader in = new FileReader("to-do-list.csv")) {
+				Iterable<CSVRecord> records = null;
+    			records = CSVFormat.DEFAULT.parse(in);
+    			
+    			for (CSVRecord record : records) {
+    				ToDoItem item = new ToDoItem();
+    				int tempId = Integer.parseInt(record.get(0));
+    				item.setId(tempId);
+    //				item.setId(Integer.parseInt(record.get(0)));  does the same thing, split above to remind myself what's going on here.
+    				item.setText(record.get(1));
+    				item.setComplete(Boolean.parseBoolean(record.get(2)));
+    				items.add(item);
+    				
+    			}
+    							
+				
+			} catch (FileNotFoundException e) {
+				System.out.println("thing");
+			} catch (IOException e) {
+				System.out.println("thing");
+			}
+    			    			  
+		 return items;    	 
     	
     }
 
@@ -93,12 +104,17 @@ public class ToDoItemRepository {
      */
     public ToDoItem getById(int id) {
         // Replace this with something meaningful
-   // 	CSVRecord item;
-   // 	final List<ToDoItem> items = new ArrayList<CSVRecord>();
-   // 	while ((item = this.nextRecord()) != null) {
-   // 		items.add(item);
-   // 	}
+    	    	
+    	List<ToDoItem> items = getAll();
     	
+    	//Iterable<CSVRecord> records = null;
+		
+			for (ToDoItem record : items) {
+				if (record.getId() == id) {
+					return record;
+				}
+			}
+				
         return null;
     }
 
@@ -108,6 +124,14 @@ public class ToDoItemRepository {
      */
     public void update(ToDoItem item) {
         // Fill this in with something meaningful
+    	
+    	List<ToDoItem> items = getAll();
+    	
+    	for (ToDoItem record : items) {
+    		if (record.getId() == item.getId()) {
+    			item.setComplete(true);
+    		}
+    	}
     }
 
 }
