@@ -125,13 +125,40 @@ public class ToDoItemRepository {
     public void update(ToDoItem item) {
         // Fill this in with something meaningful
     	
+    	int nextNewId = 1;
+    	
     	List<ToDoItem> items = getAll();
     	
-    	for (ToDoItem record : items) {
-    		if (record.getId() == item.getId()) {
-    			item.setComplete(true);
-    		}
-    	}
-    }
+    	List<ToDoItem> newItems = new ArrayList<ToDoItem>();
+    	
+ //   	List<ToDoItem> empty = new ArrayList<ToDoItem>();
+    	
+    	try (FileWriter writer = new FileWriter("to-do-list.csv", false);
+                CSVPrinter printer = CSVFormat.DEFAULT.print(writer)) {
 
+    	
+    	for (ToDoItem record : items) {
+    		
+    		if (record.getId() == item.getId()) {
+    			record.setComplete(true);
+    			record.setId(nextNewId);
+    		} else {
+    			record.setId(nextNewId);	
+    		}
+    		
+    		nextNewId += 1;
+    		
+    		String[] newRecord =  {Integer.toString(record.getId()), record.getText(), Boolean.toString(record.isComplete())};    
+                  
+            printer.printRecord(newRecord);
+          
+    		}  }
+                 catch (IOException e) {
+                   System.out.println("error thing on create");
+               }
+
+    		
+    	
+    }
 }
+
