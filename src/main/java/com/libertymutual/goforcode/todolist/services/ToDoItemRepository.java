@@ -107,7 +107,7 @@ public class ToDoItemRepository {
     	    	
     	List<ToDoItem> items = getAll();
     	
-    	//Iterable<CSVRecord> records = null;
+
 		
 			for (ToDoItem record : items) {
 				if (record.getId() == id) {
@@ -131,7 +131,6 @@ public class ToDoItemRepository {
     	
     	List<ToDoItem> newItems = new ArrayList<ToDoItem>();
     	
- //   	List<ToDoItem> empty = new ArrayList<ToDoItem>();
     	
     	try (FileWriter writer = new FileWriter("to-do-list.csv", false);
                 CSVPrinter printer = CSVFormat.DEFAULT.print(writer)) {
