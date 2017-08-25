@@ -28,15 +28,15 @@ import com.libertymutual.goforcode.todolist.models.ToDoItem;
 @Service
 public class ToDoItemRepository {
 
-    private int nextId = 1;
+    private int nextId = 0;
+    public int sizeOfArray;
 
     /**
      * Get all the items from the file. 
      * @return A list of the items. If no items exist, returns an empty list.
      */
     public List<ToDoItem> getAll() {
- 
-    	
+    	    	
     	List<ToDoItem> items = new ArrayList<ToDoItem>();
     	
     	try  (Reader in = new FileReader("to-do-list.csv")) {
@@ -60,20 +60,30 @@ public class ToDoItemRepository {
 			} catch (IOException e) {
 				System.out.println("thing");
 			}
-    			    			  
+    		
+    	 sizeOfArray = items.size();
+    	 System.out.println(sizeOfArray);
+    	 
 		 return items;    	 
     	
     }
 
-    
-    /**
+     /**
      * Assigns a new id to the ToDoItem and saves it to the file.
      * @param item The to-do item to save to the file.
      */
     public void create(ToDoItem item) {
-    	 item.setId(nextId);
-    	 
-         nextId += 1;
+    	   	
+    	System.out.println(sizeOfArray);
+		
+    	nextId = sizeOfArray;
+    	
+    	nextId += 1;
+    	
+    	item.setId(nextId);
+    	  	
+    	
+        
     		    	
     	try (FileWriter writer = new FileWriter("to-do-list.csv", true);
                 CSVPrinter printer = CSVFormat.DEFAULT.print(writer)) {
@@ -107,9 +117,7 @@ public class ToDoItemRepository {
     	    	
     	List<ToDoItem> items = getAll();
     	
-
-		
-			for (ToDoItem record : items) {
+		for (ToDoItem record : items) {
 				if (record.getId() == id) {
 					return record;
 				}
@@ -140,11 +148,10 @@ public class ToDoItemRepository {
     		
     		if (record.getId() == item.getId()) {
     			record.setComplete(true);
-    			record.setId(nextNewId);
-    		} else {
-    			record.setId(nextNewId);	
-    		}
+    			
+    		} 
     		
+    		record.setId(nextNewId);
     		nextNewId += 1;
     		
     		String[] newRecord =  {Integer.toString(record.getId()), record.getText(), Boolean.toString(record.isComplete())};    
